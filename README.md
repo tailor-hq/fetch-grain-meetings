@@ -84,7 +84,7 @@ fetch-grain-meetings/
 3. Script saves tokens for future runs
 
 **Customize Date Range:**
-Set `FETCH_START_DATE` environment variable to change the default start date (format: YYYY-MM-DD). Default: 1 year ago from today.
+Set `FETCH_START_DATE` environment variable to change the default start date (format: YYYY-MM-DD). Default: 1 year ago from today OR 2025-01-01, whichever is earlier (ensures we go back to at least the beginning of 2025).
 ```bash
 FETCH_START_DATE=2024-01-01 node fetch-new-grain-meetings.js
 ```
@@ -108,7 +108,8 @@ node fetch-new-grain-meetings.js --skip-oauth
 
 **Custom date range:**
 ```bash
-# Default: 1 year ago from today
+# Default: 1 year ago from today OR 2025-01-01, whichever is earlier
+# (This ensures we always go back to at least the beginning of 2025)
 # Override: Start from a specific date
 FETCH_START_DATE=2024-01-01 node fetch-new-grain-meetings.js
 ```
@@ -162,7 +163,7 @@ node src/utils/check-and-clean-duplicates.js --delete
 All configuration is done via environment variables. Here's a complete reference:
 
 ### Date and Year Ranges
-- `FETCH_START_DATE` - Start date for fetching meetings (format: YYYY-MM-DD). Default: 1 year ago
+- `FETCH_START_DATE` - Start date for fetching meetings (format: YYYY-MM-DD). Default: 1 year ago OR 2025-01-01, whichever is earlier (ensures we go back to at least the beginning of 2025)
 - `FETCH_END_DATE` - End date for fetching meetings (format: YYYY-MM-DD). Default: today
 - `SCAN_START_YEAR` - Start year for scanning existing files. Default: current year - 2
 - `SCAN_END_YEAR` - End year for scanning existing files. Default: current year + 2

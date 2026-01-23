@@ -70,9 +70,13 @@ const OAUTH_TIMEOUT_MS = safeParseInt(process.env.OAUTH_TIMEOUT_MS, 30000);
 // Date range: today back to configurable start date
 const today = new Date();
 today.setHours(23, 59, 59, 999); // End of today
-// Default to 1 year ago, or use FETCH_START_DATE env var (format: YYYY-MM-DD)
-const defaultStartDate = new Date(today);
-defaultStartDate.setFullYear(defaultStartDate.getFullYear() - 1);
+// Default to 1 year ago OR 2025-01-01, whichever is earlier (ensures we go back to at least 2025)
+// Can be overridden with FETCH_START_DATE env var (format: YYYY-MM-DD)
+const oneYearAgo = new Date(today);
+oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+const minStartDate = new Date('2025-01-01T00:00:00Z');
+// Use the earlier of the two dates (further back in time)
+const defaultStartDate = new Date(Math.min(oneYearAgo.getTime(), minStartDate.getTime()));
 const START_DATE = process.env.FETCH_START_DATE || defaultStartDate.toISOString().split('T')[0];
 const END_DATE = today.toISOString().split('T')[0] + 'T23:59:59Z';
 
