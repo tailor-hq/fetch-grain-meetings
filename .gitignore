@@ -1,0 +1,22 @@
+# Downloaded meeting files
+downloaded-grain-meetings/
+
+# OAuth cache
+.mcp-cache/
+
+# Progress files (user-specific, contains meeting IDs)
+fetch-progress.json
+transcript-progress.json
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Temporary files
+temp-*.json
+*.tmp
