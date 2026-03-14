@@ -8,11 +8,12 @@
  * 3. Fetches new transcripts for meetings that are missing them
  * 
  * Usage:
- *   node fetch-new-grain-meetings.js [--skip-oauth] [--skip-transcripts]
- * 
+ *   node fetch-new-grain-meetings.js [--skip-oauth] [--skip-transcripts] [--my-meetings]
+ *
  * Options:
  *   --skip-oauth        Skip OAuth check (assume already authenticated)
  *   --skip-transcripts  Only fetch meeting metadata, skip transcript fetching
+ *   --my-meetings       Only fetch meetings you attended (default: all org meetings)
  * 
  * The script automatically:
  * - Skips meetings that already exist
@@ -84,6 +85,7 @@ const END_DATE = today.toISOString().split('T')[0] + 'T23:59:59Z';
 const args = process.argv.slice(2);
 const skipOAuth = args.includes('--skip-oauth');
 const skipTranscripts = args.includes('--skip-transcripts');
+const myMeetingsOnly = args.includes('--my-meetings');
 
 // ============================================================================
 // OAuth and MCP Helpers
@@ -642,6 +644,7 @@ async function fetchMeetings() {
   let fetchCompletedSuccessfully = false;
 
   console.log(`📊 Status:`);
+  console.log(`   - Mode: ${myMeetingsOnly ? 'My meetings only' : 'All org meetings'}`);
   console.log(`   - Already processed: ${progress.processedMeetingIds.size} meetings`);
   console.log(`   - Date range: ${fetchStartDate.split('T')[0]} to ${END_DATE.split('T')[0]}`);
   console.log(`   - Resuming from cursor: ${cursor ? 'Yes' : 'No'}\n`);
@@ -651,8 +654,9 @@ async function fetchMeetings() {
     console.log(`\n--- Batch ${batchNum} ---`);
     
     try {
-      const rawResult = await callMCPTool('list_attended_meetings', {
-        limit: 100,
+      const listTool = myMeetingsOnly ? 'list_attended_meetings' : 'list_meetings';
+      const rawResult = await callMCPTool(listTool, {
+        limit: 20,
         cursor: cursor || undefined,
         filters: {
           after_datetime: fetchStartDate.includes('T') ? fetchStartDate : fetchStartDate + 'T00:00:00Z',

@@ -1,6 +1,6 @@
 # Grain Meetings Fetcher
 
-Fetch and organize Grain meeting recordings and transcripts locally. This tool connects to the Grain API via MCP (Model Context Protocol) to download your meeting metadata and transcripts, organizing them as markdown files.
+Fetch and organize Grain meeting recordings and transcripts locally. This tool connects to the Grain API via MCP (Model Context Protocol) to download all org meeting metadata and transcripts, organizing them as markdown files.
 
 ## Prerequisites
 
@@ -44,6 +44,7 @@ Fetches meeting metadata and transcripts from Grain API and organizes them as ma
 Options:
 - `--skip-oauth` - Skip OAuth check (if already authenticated)
 - `--skip-transcripts` - Only fetch meeting metadata, skip transcripts
+- `--my-meetings` - Only fetch meetings you attended (default: all org meetings)
 
 ### Utilities
 
@@ -59,7 +60,7 @@ Options:
 - Type: `Stdio`
 - Command: `/path/to/fetch-grain-meetings/src/mcp/run-mcp-shim.sh`
 
-Then use MCP tools `list_attended_meetings` and `fetch_meeting_transcript` directly in Cursor.
+Then use MCP tools `list_meetings` and `fetch_meeting_transcript` directly in Cursor.
 
 ## Folder Structure
 
@@ -95,6 +96,11 @@ FETCH_START_DATE=2024-01-01 node fetch-new-grain-meetings.js
 ```
 
 ## Advanced Usage
+
+**Fetch only your meetings (not all org meetings):**
+```bash
+node fetch-new-grain-meetings.js --my-meetings
+```
 
 **Fetch only meeting metadata (skip transcripts):**
 ```bash

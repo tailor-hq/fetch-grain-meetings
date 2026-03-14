@@ -17,6 +17,9 @@ node_modules/
 *.swo
 *~
 
+# Private learnings/analysis
+learnings/
+
 # Temporary files
 temp-*.json
 *.tmp
