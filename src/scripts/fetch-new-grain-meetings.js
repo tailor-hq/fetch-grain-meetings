@@ -818,10 +818,18 @@ async function fetchTranscripts() {
 
     try {
       // Fetch transcript via MCP
+      // Note: only pass meeting_id - the tool schema rejects extra params
+      // (include_timestamps previously caused every fetch to fail)
       const mcpResponse = await callMCPTool('fetch_meeting_transcript', {
-        meeting_id: id,
-        include_timestamps: false
+        meeting_id: id
       });
+
+      // Never write tool errors into meeting files - the error text would
+      // replace the placeholder and the meeting would never be retried
+      if (mcpResponse.isError) {
+        const errText = (mcpResponse.content && mcpResponse.content[0] && mcpResponse.content[0].text) || 'Unknown tool error';
+        throw new Error(`MCP tool error: ${errText}`);
+      }
 
       // Update meeting file
       const success = updateTranscript(id, JSON.stringify(mcpResponse));
