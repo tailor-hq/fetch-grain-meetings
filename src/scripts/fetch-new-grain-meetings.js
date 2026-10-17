@@ -828,6 +828,16 @@ async function fetchTranscripts() {
       // replace the placeholder and the meeting would never be retried
       if (mcpResponse.isError) {
         const errText = (mcpResponse.content && mcpResponse.content[0] && mcpResponse.content[0].text) || 'Unknown tool error';
+        // Meeting was deleted in Grain - mark processed so we stop retrying it
+        if (errText.includes('not_found')) {
+          const skipProgress = loadProgress();
+          if (!skipProgress.processedMeetingIds.includes(id)) {
+            skipProgress.processedMeetingIds.push(id);
+            saveProgress(skipProgress);
+          }
+          console.log(`   ⊘ Not found in Grain, skipping permanently`);
+          continue;
+        }
         throw new Error(`MCP tool error: ${errText}`);
       }
 
